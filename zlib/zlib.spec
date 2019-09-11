@@ -3,6 +3,7 @@
 Name:    zlib
 Version: 1.2.11
 Release: 18%{?dist}
+Group: System Environment/Libraries
 Summary: The compression and decompression library
 # /contrib/dotzlib/ have Boost license
 License: zlib and Boost
