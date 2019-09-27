@@ -5,11 +5,7 @@
 
 %global native_compiler 1
 
-%ifarch %{ocaml_natdynlink}
 %global natdynlink 1
-%else
-%global natdynlink 0
-%endif
 
 # These are all the architectures that the tests run on.  The tests
 # take a long time to run, so don't run them on slow machines.
