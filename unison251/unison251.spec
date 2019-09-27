@@ -34,9 +34,7 @@ Source0:   https://www.cis.upenn.edu/~bcpierce/unison/download/releases/unison-%
 Source1:   unison.png
 Source2:   https://www.cis.upenn.edu/~bcpierce/unison/download/releases/unison-%{ver_compat}%{ver_noncompat}/unison-%{ver_compat}%{ver_noncompat}-manual.html
 
-%if 0%{?el8}
 Patch0: unison-%{ver_compat}%{ver_noncompat}-lablgtk.2.18.6-fix.patch
-%endif
 
 # can't make this noarch (rpmbuild fails about unpackaged debug files)
 # BuildArch:     noarch
@@ -111,7 +109,9 @@ This package provides the fsmonitor functionality of unison.
 %prep
 %setup -q -n unison-%{version}
 
+%if 0%{?el8}
 %patch0 -p1
+%endif
 
 cat > %{name}.desktop <<EOF
 [Desktop Entry]
