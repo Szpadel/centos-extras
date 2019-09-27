@@ -23,7 +23,7 @@
 
 Name:      unison%{ver_compat_name}
 Version:   %{ver_compat}%{ver_noncompat}
-Release:   2%{?dist}
+Release:   3%{?dist}
 
 Summary:   Multi-master File synchronization tool
 
@@ -40,7 +40,8 @@ Patch0: unison-%{ver_compat}%{ver_noncompat}-lablgtk.2.18.6-fix.patch
 # BuildArch:     noarch
 ExcludeArch:   sparc64 s390 s390x
 
-BuildRequires: ocaml texlive-latex-bin-bin
+BuildRequires: ocaml >= 4.07.0, ocaml < 4.08
+BuildRequires: texlive-latex-bin-bin
 
 Requires:   %{name}-ui = %{version}-%{release}
 
