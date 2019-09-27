@@ -95,7 +95,7 @@ make old-install \
 cp META $RPM_BUILD_ROOT%{_libdir}/ocaml/lablgtk2
 
 # Remove ld.conf (part of main OCaml dist).
-rm $RPM_BUILD_ROOT%{_libdir}/ocaml/ld.conf
+#rm $RPM_BUILD_ROOT%{_libdir}/ocaml/ld.conf
 
 # Remove unnecessary *.ml files (ones which have a *.mli).
 pushd $RPM_BUILD_ROOT%{_libdir}/ocaml/lablgtk2
