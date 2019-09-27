@@ -36,7 +36,7 @@ Source2:   https://www.cis.upenn.edu/~bcpierce/unison/download/releases/unison-%
 
 %if 0%{el8}
 Patch0: unison-%{ver_compat}%{ver_noncompat}-lablgtk.2.18.6-fix.patch
-%endifi
+%endif
 
 # can't make this noarch (rpmbuild fails about unpackaged debug files)
 # BuildArch:     noarch
