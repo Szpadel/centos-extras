@@ -25,7 +25,7 @@
 # you want to build OCaml without requiring an existing OCaml package,
 # or if you want to build OCaml exactly as it is built upstream (using
 # a binary ocamlc from the previous build), then use ‘--with bootstrap’.
-%bcond_with bootstrap
+%bcond_without bootstrap
 
 Name:           ocaml
 Version:        4.07.0
