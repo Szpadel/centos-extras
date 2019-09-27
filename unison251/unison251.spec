@@ -34,7 +34,7 @@ Source0:   https://www.cis.upenn.edu/~bcpierce/unison/download/releases/unison-%
 Source1:   unison.png
 Source2:   https://www.cis.upenn.edu/~bcpierce/unison/download/releases/unison-%{ver_compat}%{ver_noncompat}/unison-%{ver_compat}%{ver_noncompat}-manual.html
 
-%if 0%{el8}
+%if 0%{?el8}
 Patch0: unison-%{ver_compat}%{ver_noncompat}-lablgtk.2.18.6-fix.patch
 %endif
 
