@@ -86,7 +86,7 @@ mkdir -p $RPM_BUILD_ROOT%{_bindir}
 mkdir -p $RPM_BUILD_ROOT%{_libdir}
 mkdir -p $RPM_BUILD_ROOT%{_libdir}/ocaml/lablgtk2
 mkdir -p $RPM_BUILD_ROOT%{_libdir}/ocaml/stublibs
-make install \
+make old-install \
      RANLIB=true \
      BINDIR=$RPM_BUILD_ROOT%{_bindir} \
      LIBDIR=$RPM_BUILD_ROOT%{_libdir} \
