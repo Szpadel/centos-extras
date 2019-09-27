@@ -109,7 +109,7 @@ This package provides the fsmonitor functionality of unison.
 %prep
 %setup -q -n unison-%{version}
 
-%if 0%{?el8}
+%if 0%{?el8}%{?fedora}
 %patch0 -p1
 %endif
 
