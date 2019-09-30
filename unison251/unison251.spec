@@ -163,11 +163,13 @@ cp -a unison-text %{buildroot}%{_bindir}/unison-text-%{ver_compat}
 
 cp -a unison-fsmonitor %{buildroot}%{_bindir}/unison-fsmonitor-%{ver_compat}
 
+%if 0%{?include_gtk}
 mkdir -p %{buildroot}%{_datadir}/pixmaps
 cp -a %{SOURCE1} %{buildroot}%{_datadir}/pixmaps/%{name}.png
 
 desktop-file-install --dir %{buildroot}%{_datadir}/applications \
     %{name}.desktop
+%endif
 
 # create/own alternatives target
 touch %{buildroot}%{_bindir}/unison
