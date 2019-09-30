@@ -21,6 +21,13 @@
 # available in this Fedora branch/release? If so, we provide unison.
 %global provide_unison 1
 
+# Gtk2 build isn't working for el8
+%if 0%{?el8}
+%global include_gtk 0
+%else
+%global include_gtk 1
+%endif
+
 Name:      unison%{ver_compat_name}
 Version:   %{ver_compat}%{ver_noncompat}
 Release:   3%{?dist}
@@ -59,7 +66,7 @@ Note that this package contains Unison version %{ver_compat}, and
 will never be upgraded to a different major version. Other packages
 exist if you require a different major version.
 
-
+%if 0%{?include_gtk}
 %package gtk
 
 Summary:   Multi-master File synchronization tool - gtk interface
@@ -81,7 +88,7 @@ Provides: unison = %{version}-%{release}
 
 %description gtk
 This package provides the graphical version of unison with gtk2 interface.
-
+%endif
 
 %package text
 
@@ -134,8 +141,10 @@ cp -a %{SOURCE2} unison-manual.html
 unset MAKEFLAGS
 
 # we compile 2 versions: gtk2 ui and text ui
+%if 0%{?include_gtk}
 make NATIVE=true UISTYLE=gtk2 THREADS=true
 mv unison unison-gtk
+%endif
 
 make NATIVE=true UISTYLE=text THREADS=true
 mv unison unison-text
@@ -144,9 +153,11 @@ mv unison unison-text
 %install
 mkdir -p %{buildroot}%{_bindir}
 
+%if 0%{?include_gtk}
 cp -a unison-gtk %{buildroot}%{_bindir}/unison-gtk-%{ver_compat}
 # symlink for compatibility
 ln -s %{_bindir}/unison-gtk-%{ver_compat} %{buildroot}%{_bindir}/unison-%{ver_compat}
+%endif
 
 cp -a unison-text %{buildroot}%{_bindir}/unison-text-%{ver_compat}
 
@@ -161,7 +172,7 @@ desktop-file-install --dir %{buildroot}%{_datadir}/applications \
 # create/own alternatives target
 touch %{buildroot}%{_bindir}/unison
 
-
+%if 0%{?include_gtk}
 %posttrans gtk
 alternatives \
   --install \
@@ -175,7 +186,7 @@ if [ $1 -eq 0 ]; then
   alternatives --remove unison \
     %{_bindir}/unison-%{ver_compat}
 fi
-
+%endif
 
 %posttrans text
 alternatives \
@@ -212,13 +223,14 @@ fi
 %doc COPYING NEWS README unison-manual.html
 
 
+%if 0%{?include_gtk}
 %files gtk
 %ghost %{_bindir}/unison
 %{_bindir}/unison-gtk-%{ver_compat}
 %{_bindir}/unison-%{ver_compat}
 %{_datadir}/applications/%{name}.desktop
 %{_datadir}/pixmaps/%{name}.png
-
+%endif
 
 %files text
 %ghost %{_bindir}/unison
