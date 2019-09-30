@@ -30,7 +30,7 @@
 
 Name:      unison%{ver_compat_name}
 Version:   %{ver_compat}%{ver_noncompat}
-Release:   3%{?dist}
+Release:   4%{?dist}
 
 Summary:   Multi-master File synchronization tool
 
@@ -241,6 +241,9 @@ fi
 %{_bindir}/unison-fsmonitor-%{ver_compat}
 
 %changelog
+* Mon Sep 30 2019 Piotr Rogowski <piotr.rogowski@creativestyle.pl> - 2.51.2-4
+- Exclude gtk support from el8
+
 * Fri Jun 7 2019 Chris Roadfeldt <chris@roadfeldt.com> - 2.51.2-2
 - Added unison-fsmonitor package.
 
