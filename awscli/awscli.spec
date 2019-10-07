@@ -35,7 +35,7 @@ pip install %{pkg}==%{version}
 pip uninstall -y pip setuptools
 %{__python3} -m virtualenv --relocatable %{venv_path}
 deactivate
-rm %{venv_path}/bin/{activate,activate.csh,activate.fish,Activate.ps1}
+rm -f %{venv_path}/bin/{activate,activate.csh,activate.fish,Activate.ps1,activate.bat}
 rm %{venv_path}/bin/python %{venv_path}/bin/python3
 
 %install
