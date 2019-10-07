@@ -1,5 +1,7 @@
 %global pkg awscli
 %global binary aws
+%global venv_path %{pkg}
+
 Name:           %{pkg}
 Version:        1.16.253
 Release:        1%{?dist}
@@ -23,21 +25,24 @@ for any...
 %prep
 
 %build
-%{__python3} -m venv --copies venv
-source ./venv/bin/activate
+virtualenv -p %{__python3} empty_env
+mkdir -p %{venv_path}
+%{__python3} -m venv --copies %{venv_path}
+cp empty_env/bin/activate_this.py %{venv_path}/bin/
+source %{venv_path}/bin/activate
 pip install %{pkg}==%{version}
 pip uninstall -y pip setuptools
-virtualenv --relocatable venv
+virtualenv --relocatable %{venv_path}
 deactivate
-rm venv/bin/activate* venv/bin/Activate*
-rm venv/bin/python venv/bin/python3
+rm %{venv_path}/bin/{activate,activate.csh,activate.fish,Activate.ps1}
+rm %{venv_path}/bin/python %{venv_path}/bin/python3
 
 %install
-mkdir -p %{buildroot}%{_datadir}/%{pkg}
-cp -r venv/* %{buildroot}%{_datadir}/%{pkg}/
+mkdir -p %{buildroot}%{_datadir}
+cp -r %{venv_path} %{buildroot}%{_datadir}/%{pkg}
 
 %posttrans
-alternatives --install %{_bindir}/%{binary} %{binary} %{_datadir}/%{pkg}/bin/%{binary} %{version}
+alternatives --install %{_bindir}/%{binary} %{binary} %{_datadir}/%{pkg}/bin/%{binary} 1
 ln -s %{_bindir}/python %{_datadir}/%{pkg}/bin/python
 ln -s %{_bindir}/python3 %{_datadir}/%{pkg}/bin/python3
 
