@@ -26,14 +26,14 @@ for any...
 %prep
 
 %build
-virtualenv -p %{__python3} empty_env
+%{__python3} -m virtualenv -p %{__python3} empty_env
 mkdir -p %{venv_path}
 %{__python3} -m venv --copies %{venv_path}
 cp empty_env/bin/activate_this.py %{venv_path}/bin/
 source %{venv_path}/bin/activate
 pip install %{pkg}==%{version}
 pip uninstall -y pip setuptools
-virtualenv --relocatable %{venv_path}
+%{__python3} -m virtualenv --relocatable %{venv_path}
 deactivate
 rm %{venv_path}/bin/{activate,activate.csh,activate.fish,Activate.ps1}
 rm %{venv_path}/bin/python %{venv_path}/bin/python3
