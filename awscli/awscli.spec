@@ -12,6 +12,7 @@ URL:            http://aws.amazon.com/cli/
 BuildArch:      noarch
 
 BuildRequires:  python%{python3_pkgversion}
+BuildRequires:  python%{python3_pkgversion}-virtualenv
 Requires:       python%{python3_pkgversion}
 
 %description
