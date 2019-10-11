@@ -3,7 +3,7 @@
 %global venv_path %{pkg}
 
 Name:           %{pkg}
-Version:        1.16.253
+Version:        1.16.257
 Release:        1%{?dist}
 Summary:        Universal Command Line Environment for AWS
 
@@ -54,5 +54,8 @@ ln -s %{_bindir}/python3 %{_datadir}/%{pkg}/bin/python3
 %{_datadir}/%{pkg}/
 
 %changelog
+* Fri Oct 11 2019 Piotr Rogowski <piotr.rogowski@creativestyle.pl> - 1.16.257-1
+- new version
+
 * Mon Oct 07 2019 Piotr Rogowski <piotr.rogowski@creativestyle.pl> - 1.16.253-1
 - Initial package.
