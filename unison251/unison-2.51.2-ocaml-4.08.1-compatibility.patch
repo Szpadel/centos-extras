@@ -1,14 +1,3 @@
-From 23fa129254a3304902739fc989950cc747d1e0b3 Mon Sep 17 00:00:00 2001
-From: Jaap Boender <jaapb@kerguelen.org>
-Date: Thu, 21 Mar 2019 12:26:51 +0000
-Subject: [PATCH] Compatibility with OCaml 4.08
-
----
- src/files.ml                 | 2 +-
- src/recon.ml                 | 4 ++--
- src/system/system_generic.ml | 2 +-
- 3 files changed, 4 insertions(+), 4 deletions(-)
-
 diff --git a/src/files.ml b/src/files.ml
 index 72cd3387..bc162b12 100644
 --- a/src/files.ml
