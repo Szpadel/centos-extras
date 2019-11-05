@@ -3,11 +3,7 @@
 # architectures.  A further subset of architectures support native
 # dynamic linking.
 
-%ifarch %{ocaml_native_compiler}
 %global native_compiler 1
-%else
-%global native_compiler 0
-%endif
 
 %ifarch %{ocaml_natdynlink}
 %global natdynlink 1
