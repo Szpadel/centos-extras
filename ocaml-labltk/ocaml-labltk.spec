@@ -5,15 +5,15 @@
 %endif
 
 Name:          ocaml-labltk
-Version:       8.06.4
-Release:       8%{?dist}
+Version:       8.06.5
+Release:       4%{?dist}
 
 Summary:       Tcl/Tk interface for OCaml
 
 License:       LGPLv2+ with exceptions
 
 URL:           https://forge.ocamlcore.org/projects/labltk/
-Source0:       https://forge.ocamlcore.org/frs/download.php/1727/labltk-8.06.4.tar.gz
+Source0:       https://forge.ocamlcore.org/frs/download.php/1727/labltk-%{version}.tar.gz
 
 # This adds debugging (-g) everywhere.
 Patch1:        labltk-8.06.0-enable-debugging.patch
@@ -53,6 +53,11 @@ find -name .gitignore -delete
 # Kill -warn-error.
 find -type f | xargs sed -i -e 's/-warn-error/-w/g'
 
+# Don't build ocamlbrowser.
+mv browser browser.old
+mkdir browser
+echo -e 'all:\ninstall:\n' > browser/Makefile
+
 
 %build
 ./configure
@@ -63,8 +68,9 @@ unset MAKEFLAGS
 %if !%{native_compiler}
 make byte
 %else
-make all
-make opt
+make all opt \
+     SHAREDCCCOMPOPTS="%{optflags} -fPIC" \
+     TK_LINK="%{__global_ldflags} -ltk8.6 -ltcl8.6"
 %endif
 
 
@@ -97,7 +103,6 @@ install -m 0644 camltk/*.o $RPM_BUILD_ROOT%{_libdir}/ocaml/labltk
 %doc examples_camltk
 %doc examples_labltk
 %{_bindir}/labltk
-%{_bindir}/ocamlbrowser
 %{_libdir}/ocaml/labltk/labltktop
 %{_libdir}/ocaml/labltk/pp
 %{_libdir}/ocaml/labltk/tkcompiler
@@ -111,6 +116,21 @@ install -m 0644 camltk/*.o $RPM_BUILD_ROOT%{_libdir}/ocaml/labltk
 
 
 %changelog
+* Wed Jul 31 2019 Richard W.M. Jones <rjones@redhat.com> - 8.06.5-4
+- OCaml 4.08.1 (rc2) rebuild.
+
+* Thu Jul 25 2019 Fedora Release Engineering <releng@fedoraproject.org> - 8.06.5-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_31_Mass_Rebuild
+
+* Thu Jun 27 2019 Richard W.M. Jones <rjones@redhat.com> - 8.06.5-2
+- OCaml 4.08.0 (final) rebuild.
+
+* Mon Apr 29 2019 Richard W.M. Jones <rjones@redhat.com> - 8.06.5-1
+- New upstream version 8.06.5.
+- Try harder to set CFLAGS and LDFLAGS.
+- Don't build ocamlbrowser.
+- OCaml 4.08.0 (beta 3) rebuild.
+
 * Fri Feb 01 2019 Fedora Release Engineering <releng@fedoraproject.org> - 8.06.4-8
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_30_Mass_Rebuild
 

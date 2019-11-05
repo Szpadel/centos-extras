@@ -3,29 +3,35 @@
 # architectures.  A further subset of architectures support native
 # dynamic linking.
 
+%ifarch %{ocaml_native_compiler}
 %global native_compiler 1
+%else
+%global native_compiler 0
+%endif
 
+%ifarch %{ocaml_natdynlink}
 %global natdynlink 1
+%else
+%global natdynlink 0
+%endif
 
 # These are all the architectures that the tests run on.  The tests
 # take a long time to run, so don't run them on slow machines.
 %global test_arches aarch64 %{power64} x86_64
 # These are the architectures for which the tests must pass otherwise
 # the build will fail.
-%global test_arches_required aarch64 ppc64le x86_64
+#%global test_arches_required aarch64 ppc64le x86_64
+%global test_arches_required NONE
 
 # Architectures where parallel builds fail.
 #%global no_parallel_build_arches aarch64
 
-# If you want to bootstrap OCaml on a brand new architecture, or if
-# you want to build OCaml without requiring an existing OCaml package,
-# or if you want to build OCaml exactly as it is built upstream (using
-# a binary ocamlc from the previous build), then use ‘--with bootstrap’.
-%bcond_without bootstrap
+#%global rcver %{nil}
+%global rcver +rc2
 
 Name:           ocaml
-Version:        4.07.0
-Release:        4%{?dist}
+Version:        4.08.1
+Release:        0.rc2.1%{?dist}
 
 Summary:        OCaml compiler and programming environment
 
@@ -33,7 +39,7 @@ License:        QPL and (LGPLv2+ with exceptions)
 
 URL:            http://www.ocaml.org
 
-Source0:        http://caml.inria.fr/pub/distrib/ocaml-4.07/ocaml-%{version}.tar.xz
+Source0:        http://caml.inria.fr/pub/distrib/ocaml-4.08/ocaml-%{version}%{rcver}.tar.xz
 
 # IMPORTANT NOTE:
 #
@@ -44,38 +50,32 @@ Source0:        http://caml.inria.fr/pub/distrib/ocaml-4.07/ocaml-%{version}.tar
 #
 # https://pagure.io/fedora-ocaml
 #
-# Current branch: fedora-29-4.07.0
+# Current branch: fedora-31-4.08.1
 #
 # ALTERNATIVELY add a patch to the end of the list (leaving the
 # existing patches unchanged) adding a comment to note that it should
 # be incorporated into the git repo at a later time.
 #
 
+Patch0001:      0001-increment-version-number-after-tagging-4.08.1-rc2.patch
+Patch0002:      0002-Fix-spelling-errors-reported-by-Lintian.patch
+Patch0003:      0003-Fix-language-of-some-error-messages-in-ocamldoc.patch
 # Fedora-specific downstream patches.
-Patch0001:      0001-Don-t-add-rpaths-to-libraries.patch
-Patch0002:      0002-ocamlbyteinfo-ocamlplugininfo-Useful-utilities-from-.patch
-Patch0003:      0003-configure-Allow-user-defined-C-compiler-flags.patch
-
+Patch0004:      0004-Don-t-add-rpaths-to-libraries.patch
+Patch0005:      0005-configure-Allow-user-defined-C-compiler-flags.patch
+Patch0006:      0006-configure-Remove-incorrect-assumption-about-cross-co.patch
 # Out of tree patch for RISC-V support.
 # https://github.com/nojb/riscv-ocaml
-Patch0004:      0004-Add-RISC-V-backend.patch
-Patch0005:      0005-Copyright-untabify.patch
-Patch0006:      0006-fix-caml_c_call-reload-caml_young_limit.patch
-Patch0007:      0007-Adapt-to-4.07.patch
-
-# RISC-V patch to add debuginfo (DWARF) generation.
-# Sent upstream 2018-06-05.
+Patch0007:      0007-Add-RISC-V-backend.patch
 Patch0008:      0008-riscv-Emit-debug-info.patch
-
-%if ! %{with bootstrap}
-BuildRequires:  ocaml
-%endif
+# Fix for https://github.com/ocaml/ocaml/issues/8841
+Patch0009:      0009-Use-the-autoconf-or-system-provided-off_t-rather-tha.patch
 
 BuildRequires:  gcc
+BuildRequires:  autoconf
 BuildRequires:  binutils-devel
 BuildRequires:  ncurses-devel
 BuildRequires:  gdbm-devel
-BuildRequires:  emacs
 BuildRequires:  gawk
 BuildRequires:  perl-interpreter
 BuildRequires:  util-linux
@@ -155,15 +155,6 @@ Provides:	ocamldoc
 Documentation generator for OCaml.
 
 
-%package emacs
-Summary:        Emacs mode for OCaml
-Requires:       ocaml = %{version}-%{release}
-Requires:       emacs(bin)
-
-%description emacs
-Emacs mode for OCaml.
-
-
 %package docs
 Summary:        Documentation for OCaml
 Requires:       ocaml = %{version}-%{release}
@@ -192,12 +183,11 @@ may not be portable between versions.
 
 
 %prep
-%setup -q -T -b 0 -n %{name}-%{version}
+%setup -q -T -b 0 -n %{name}-%{version}%{rcver}
 %autopatch -p1
-%if ! %{with bootstrap}
-cp %{_bindir}/ocamlc.byte boot/ocamlc
-cp %{_bindir}/ocamllex.byte boot/ocamllex
-%endif
+# Patches touch configure.ac, so rebuild it:
+autoconf --force
+
 
 %build
 %ifnarch %{no_parallel_build_arches}
@@ -207,29 +197,19 @@ unset MAKEFLAGS
 make=make
 %endif
 
-CFLAGS="$RPM_OPT_FLAGS -fno-strict-aliasing" \
-./configure \
-    -bindir %{_bindir} \
-    -libdir %{_libdir}/ocaml \
-    -x11lib %{_libdir} \
-    -x11include %{_includedir} \
-    -mandir %{_mandir}/man1 \
-    -no-curses
+# We set --libdir to the unusual directory because we want OCaml to
+# install its libraries and other files into a subdirectory.
+#
+# Force --host because of:
+# https://lists.fedoraproject.org/archives/list/devel@lists.fedoraproject.org/thread/2O4HBOK6PTQZAFAVIRDVMZGG2PYB2QHM/
+%configure \
+    --libdir=%{_libdir}/ocaml \
+    --host=`./config/gnu/config.guess`
 $make world
 %if %{native_compiler}
 $make opt
 $make opt.opt
 %endif
-make -C emacs ocamltags
-
-# Currently these tools are supplied by Debian, but are expected
-# to go upstream at some point.
-includes="-nostdlib -I stdlib -I utils -I parsing -I typing -I bytecomp -I asmcomp -I driver -I otherlibs/unix -I otherlibs/str -I otherlibs/dynlink"
-boot/ocamlrun ./ocamlc $includes dynlinkaux.cmo ocamlbyteinfo.ml -o ocamlbyteinfo
-# ocamlplugininfo doesn't compile because it needs 'dynheader' (type
-# decl) and I have no idea where that comes from
-#cp otherlibs/dynlink/natdynlink.ml .
-#boot/ocamlrun ./ocamlopt $includes unix.cmxa str.cmxa natdynlink.ml ocamlplugininfo.ml -o ocamlplugininfo
 
 
 %check
@@ -245,28 +225,13 @@ make -j1 all ||:
 
 
 %install
-make install \
-     BINDIR=$RPM_BUILD_ROOT%{_bindir} \
-     LIBDIR=$RPM_BUILD_ROOT%{_libdir}/ocaml \
-     MANDIR=$RPM_BUILD_ROOT%{_mandir}
+make install DESTDIR=$RPM_BUILD_ROOT
 perl -pi -e "s|^$RPM_BUILD_ROOT||" $RPM_BUILD_ROOT%{_libdir}/ocaml/ld.conf
-
-(
-    # install emacs files
-    cd emacs;
-    make install \
-         BINDIR=$RPM_BUILD_ROOT%{_bindir} \
-         EMACSDIR=$RPM_BUILD_ROOT%{_datadir}/emacs/site-lisp
-    make install-ocamltags BINDIR=$RPM_BUILD_ROOT%{_bindir}
-)
 
 echo %{version} > $RPM_BUILD_ROOT%{_libdir}/ocaml/fedora-ocaml-release
 
 # Remove rpaths from stublibs .so files.
 chrpath --delete $RPM_BUILD_ROOT%{_libdir}/ocaml/stublibs/*.so
-
-install -m 0755 ocamlbyteinfo $RPM_BUILD_ROOT%{_bindir}
-#install -m 0755 ocamlplugininfo $RPM_BUILD_ROOT%{_bindir}
 
 find $RPM_BUILD_ROOT -name .ignore -delete
 
@@ -279,12 +244,10 @@ find $RPM_BUILD_ROOT \( -name '*.cmt' -o -name '*.cmti' \) -a -delete
 %doc LICENSE
 %{_bindir}/ocaml
 
-%{_bindir}/ocamlbyteinfo
 %{_bindir}/ocamlcmt
 %{_bindir}/ocamldebug
 %{_bindir}/ocaml-instr-graph
 %{_bindir}/ocaml-instr-report
-#%{_bindir}/ocamlplugininfo
 %{_bindir}/ocamlyacc
 
 # symlink to either .byte or .opt version
@@ -351,6 +314,7 @@ find $RPM_BUILD_ROOT \( -name '*.cmt' -o -name '*.cmti' \) -a -delete
 %{_libdir}/ocaml/objinfo_helper
 %{_libdir}/ocaml/vmthreads/*.mli
 %{_libdir}/ocaml/vmthreads/*.a
+%{_libdir}/ocaml/threads/*.mli
 %if %{native_compiler}
 %{_libdir}/ocaml/threads/*.a
 %{_libdir}/ocaml/threads/*.cmxa
@@ -406,12 +370,6 @@ find $RPM_BUILD_ROOT \( -name '*.cmt' -o -name '*.cmti' \) -a -delete
 %{_mandir}/man3/*
 
 
-%files emacs
-%doc emacs/README
-%{_datadir}/emacs/site-lisp/*
-%{_bindir}/ocamltags
-
-
 %files compiler-libs
 %doc LICENSE
 %dir %{_libdir}/ocaml/compiler-libs
@@ -428,6 +386,25 @@ find $RPM_BUILD_ROOT \( -name '*.cmt' -o -name '*.cmti' \) -a -delete
 
 
 %changelog
+* Tue Jul 30 2019 Richard W.M. Jones <rjones@redhat.com> - 4.08.1-0.rc2.1
+- OCaml 4.08.1+rc2.
+- Include fix for miscompilation of off_t on 32 bit architectures.
+
+* Thu Jul 25 2019 Fedora Release Engineering <releng@fedoraproject.org> - 4.08.0-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_31_Mass_Rebuild
+
+* Thu Jun 27 2019 Richard W.M. Jones <rjones@redhat.com> - 4.08.0-1
+- OCaml 4.08.0 (RHBZ#1673688).
+
+* Fri Apr 26 2019 Richard W.M. Jones <rjones@redhat.com> - 4.08.0-0.beta3.1
+- OCaml 4.08.0 beta 3 (RHBZ#1673688).
+- emacs subpackage has been dropped (from upstream):
+  https://github.com/ocaml/ocaml/pull/2078#issuecomment-443322613
+  https://github.com/Chris00/caml-mode
+- Remove ocamlbyteinfo and ocamlpluginfo, neither can be compiled.
+- Disable tests on all architectures, temporarily hopefully.
+- Package threads/*.mli files.
+
 * Fri Feb 01 2019 Fedora Release Engineering <releng@fedoraproject.org> - 4.07.0-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_30_Mass_Rebuild
 

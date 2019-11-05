@@ -5,13 +5,13 @@
 %global debug_package %{nil}
 %endif
 
-# Upstream has been deprecated, but still supports OCaml 4.07.
-%global commit d32d9973acb26a33c78767b6f2c095ef9d12dedd
-%global shortcommit d32d9973
+# Upstream has been deprecated, but still supports OCaml 4.08.
+%global commit 6cb56649d294092d0da55fda095738b330772520
+%global shortcommit 6cb56649
 
 Name:          ocaml-camlp4
-Version:       4.07.0
-Release:       0.git%{shortcommit}.1%{?dist}.4
+Version:       4.08.1
+Release:       1.git%{shortcommit}%{?dist}
 
 Summary:       Pre-Processor-Pretty-Printer for OCaml
 
@@ -115,6 +115,15 @@ make install \
 
 
 %changelog
+* Tue Aug 20 2019 Richard W.M. Jones <rjones@redhat.com> - 4.08.1-1.git6cb56649
+- Update to OCaml 4.08.1.
+
+* Thu Jul 25 2019 Fedora Release Engineering <releng@fedoraproject.org> - 4.08.0-0.gitd32d9973.1.6
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_31_Mass_Rebuild
+
+* Mon Apr 29 2019 Richard W.M. Jones <rjones@redhat.com> - 4.08.0-0.gitd32d9973.1.5
+- OCaml 4.08.0 (beta 3) rebuild.
+
 * Fri Feb 01 2019 Fedora Release Engineering <releng@fedoraproject.org> - 4.07.0-0.gitd32d9973.1.4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_30_Mass_Rebuild
 

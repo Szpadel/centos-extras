@@ -2,14 +2,13 @@
 
 Name:           ocaml-lablgl
 Epoch:          1
-Version:        1.05
-Release:        32%{?dist}
+Version:        1.06
+Release:        1%{?dist}
 Summary:        LablGL is an OpenGL interface for Objective Caml
 License:        BSD
 
-URL:            http://forge.ocamlcore.org/projects/lablgl/
-Source0:        https://forge.ocamlcore.org/frs/download.php/1254/lablgl-%{version}.tar.gz
-
+URL:            http://wwwfun.kurims.kyoto-u.ac.jp/soft/olabl/lablgl.html
+Source0:        https://github.com/garrigue/lablgl/archive/v1.06/%{name}-%{version}.tar.gz
 
 BuildRequires:  freeglut-devel 
 BuildRequires:  ocaml >= 3.12.1-3
@@ -22,7 +21,7 @@ BuildRequires:  libXxf86vm-devel
 BuildRequires:  mesa-libGL-devel
 BuildRequires:  mesa-libGLU-devel
 BuildRequires:	ocaml-labltk-devel
-BuildRequires:  ocaml-camlp4-devel
+
 
 %description
 LablGL is is an Objective Caml interface to OpenGL. Support is
@@ -36,6 +35,7 @@ extension, or with open-source Mesa.
 Summary:        Development files for %{name}
 Requires:       %{name} = %{epoch}:%{version}-%{release}
 Requires:       ocaml-labltk-devel
+
 
 %description    devel
 The %{name}-devel package contains libraries and signature files for
@@ -143,6 +143,14 @@ popd
 
 
 %changelog
+* Sat Aug 10 2019 Richard W.M. Jones <rjones@redhat.com> - 1:1.06-1
+- New upstream version 1.06.
+- This removes the camlp4 dependency (RHBZ#1736347).
+- Fix for new source URL.
+
+* Thu Jul 25 2019 Fedora Release Engineering <releng@fedoraproject.org> - 1:1.05-33
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_31_Mass_Rebuild
+
 * Fri Feb 01 2019 Fedora Release Engineering <releng@fedoraproject.org> - 1:1.05-32
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_30_Mass_Rebuild
 

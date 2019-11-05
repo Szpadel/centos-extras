@@ -1,6 +1,6 @@
 Name:           ocaml-findlib
-Version:        1.8.0
-Release:        5%{?dist}
+Version:        1.8.1
+Release:        2%{?dist}
 Summary:        Objective CAML package manager and build helper
 License:        BSD
 
@@ -8,7 +8,7 @@ URL:            http://projects.camlcity.org/projects/findlib.html
 Source0:        http://download.camlcity.org/download/findlib-%{version}.tar.gz
 
 BuildRequires:  ocaml >= 4.02.0
-BuildRequires:  ocaml-camlp4-devel
+#BuildRequires:  ocaml-camlp4-devel
 BuildRequires:  ocaml-labltk-devel
 BuildRequires:  ocaml-ocamlbuild-devel
 #BuildRequires:  ocaml-num-devel
@@ -99,6 +99,24 @@ make install \
 
 
 %changelog
+* Wed Jul 31 2019 Richard W.M. Jones <rjones@redhat.com> - 1.8.1-2
+- OCaml 4.08.1 (rc2) rebuild.
+
+* Tue Jul 30 2019 Richard W.M. Jones <rjones@redhat.com> - 1.8.1-1
+- New upstream version 1.8.1.
+
+* Thu Jul 25 2019 Fedora Release Engineering <releng@fedoraproject.org> - 1.8.0-9
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_31_Mass_Rebuild
+
+* Thu Jun 27 2019 Richard W.M. Jones <rjones@redhat.com> - 1.8.0-8
+- OCaml 4.08.0 (final) rebuild.
+
+* Mon Apr 29 2019 Richard W.M. Jones <rjones@redhat.com> - 1.8.0-7
+- OCaml 4.08.0 (beta 3) rebuild.
+
+* Mon Apr 29 2019 Richard W.M. Jones <rjones@redhat.com> - 1.8.0-6
+- Disable ocaml-camlp4 dependency until ported to 4.08.
+
 * Fri Feb 01 2019 Fedora Release Engineering <releng@fedoraproject.org> - 1.8.0-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_30_Mass_Rebuild
 

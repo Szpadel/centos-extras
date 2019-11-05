@@ -47,7 +47,7 @@ Patch0: unison-%{ver_compat}%{ver_noncompat}-lablgtk.2.18.6-fix.patch
 # BuildArch:     noarch
 ExcludeArch:   sparc64 s390 s390x
 
-BuildRequires: ocaml >= 4.07.0, ocaml < 4.08
+BuildRequires: ocaml = 4.08.1
 BuildRequires: texlive-latex-bin-bin
 
 Requires:   %{name}-ui = %{version}-%{release}
