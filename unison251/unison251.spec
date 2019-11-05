@@ -119,7 +119,7 @@ This package provides the fsmonitor functionality of unison.
 %setup -q -n unison-%{version}
 
 %patch0 -p1
-%patch1 -p1
+%patch1 -p2
 
 cat > %{name}.desktop <<EOF
 [Desktop Entry]
