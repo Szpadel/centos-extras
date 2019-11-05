@@ -27,7 +27,7 @@
 
 Name:           ocaml
 Version:        4.08.1
-Release:        0.rc2.1%{?dist}
+Release:        0.rc2.1%{?dist}.1
 
 Summary:        OCaml compiler and programming environment
 
@@ -382,6 +382,9 @@ find $RPM_BUILD_ROOT \( -name '*.cmt' -o -name '*.cmti' \) -a -delete
 
 
 %changelog
+* Tue Nov 05 2019 Piotr Rogowski <piotr.rogowski@creativestyle.pl> - 4.08.1-0.rc2.1.1
+- rebuilt
+
 * Tue Jul 30 2019 Richard W.M. Jones <rjones@redhat.com> - 4.08.1-0.rc2.1
 - OCaml 4.08.1+rc2.
 - Include fix for miscompilation of off_t on 32 bit architectures.
