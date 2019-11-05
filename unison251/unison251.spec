@@ -30,7 +30,7 @@
 
 Name:      unison%{ver_compat_name}
 Version:   %{ver_compat}%{ver_noncompat}
-Release:   4%{?dist}
+Release:   5%{?dist}
 
 Summary:   Multi-master File synchronization tool
 
@@ -244,6 +244,9 @@ fi
 %{_bindir}/unison-fsmonitor-%{ver_compat}
 
 %changelog
+* Tue Nov 05 2019 Piotr Rogowski <piotr.rogowski@creativestyle.pl> - 2.51.2-5
+- Update to ocaml 4.08.1
+
 * Mon Sep 30 2019 Piotr Rogowski <piotr.rogowski@creativestyle.pl> - 2.51.2-4
 - Exclude gtk support from el8
 
